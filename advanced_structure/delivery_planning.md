@@ -105,9 +105,9 @@ courses_melange = [
     {"id": "C", "deadline": 1, "valeur": 100},
     {"id": "D", "deadline": 3, "valeur": 5}
 ]
-# On peut faire C (t=1), B (t=2), A (t=3) -> Total = 125
+# On peut faire C (t=1), B (t=2), D (t=3) -> Total = 120
 print("Test 4...", max_gain_livraisons(courses_melange))
-assert max_gain_livraisons(courses_melange) == 125, "Échec Test 4 : L'optimum est 125"
+assert max_gain_livraisons(courses_melange) == 120, "Échec Test 4 : L'optimum est 120"
 
 # Test 5 : Test de performance (Grand nombre de données avec éjections massives du tas)
 import random
