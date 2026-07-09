@@ -49,3 +49,35 @@ print(chaine.getvalue())
 import numpy as np
 matrice = np.array([[1,2,3],[4,5,6]])
 print(matrice)
+
+
+# mémoization (aussi nommé bottom-up)
+from functools import cache, lru_cache
+
+@cache
+@lru_cache(128)
+def fibo(n: int) -> int:
+    if n <= 1:
+        return n
+    return fibo(n - 2) + fibo(n - 1)
+
+def fibo2(n: int, cache: dict = dict()) -> int:
+    if n <= 1:
+        cache[n] = n
+        return n
+    if n in cache:
+        return cache[n]
+    cache[n] = fibo2(n - 2, cache) + fibo2(n - 1, cache)
+    return cache[n]
+
+print(fibo2(10))
+
+# proposition de François
+def fibo3(n):
+    if n<=1:
+        return (n,0)
+    else:
+        (a,b) = fibo3(n-1)
+        return (a+b,a)
+
+print(fibo3(10))
