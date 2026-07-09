@@ -59,6 +59,53 @@ def max_fenetre_glissante(nums: list[int], k: int) -> list[int]:
     # Votre code ici
     pass
 
+def proposition1(nums: list[int], k: int) -> list[int]:
+    result = []
+    indexes = deque([])
+    for i in range(len(nums)):
+        if len(indexes) > 0 and i > indexes[0] + k - 1:
+            indexes.popleft() 
+        while len(indexes) > 0 and nums[indexes[-1]] < nums[i]:
+            indexes.pop()
+        indexes.append(i)
+        if i >= k - 1:
+            result.append(nums[indexes[0]])
+
+    return result
+
+def proposition2(nums: list[int], k: int) -> list[int]:
+    maxes = list()
+    for i in range(len(nums)+1-k):
+        maxes.append(max(nums[i:i+k]))
+    return maxes
+
+def proposition3(nums: list[int], k: int) -> list[int]:
+    def max_fenetre_glissante(nums: list[int], k: int) -> list[int]:
+    """
+    Trouve le maximum dans chaque fenêtre glissante de taille k.
+    
+    :param nums: Liste d'entiers à analyser
+    :param k: Taille de la fenêtre glissante
+    :return: Liste des maximums successifs
+    """
+    queu = deque([])
+    for i in range(k):
+        queu.append(nums[i])
+    ans =[]
+    curr_max=max(queu)
+    ans.append(curr_max)
+    i+=1
+    while i < len(nums):
+        val=queu.popleft()
+        queu.append(nums[i])
+        if val==curr_max and val >nums[i]:
+            curr_max=max(queu)
+        if nums[i]>curr_max:
+            curr_max=nums[i]
+        ans.append(curr_max)
+        i+=1
+    return ans
+
 ```
 
 ### Tests

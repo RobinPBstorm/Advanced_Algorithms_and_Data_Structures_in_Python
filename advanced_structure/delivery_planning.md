@@ -66,7 +66,7 @@ def max_gain_livraisons(courses: list[dict]) -> int:
     # À toi de jouer
     pass
 
-
+# proposition des apprenants:
 def proposition1(courses: list[dict]) -> int:
     if not courses:
         return 0
