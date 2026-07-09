@@ -66,6 +66,79 @@ def max_gain_livraisons(courses: list[dict]) -> int:
     # À toi de jouer
     pass
 
+
+def proposition1(courses: list[dict]) -> int:
+    if not courses:
+        return 0
+    s_courses = sorted(courses, key=lambda x: x["deadline"])
+    heap = []
+    for course in s_courses:
+        heapq.heappush(heap, course['valeur'])
+        if len(heap) > course['deadline']:
+            heapq.heappop(heap)
+    return sum(heap)
+
+def proposition2(courses: list[dict]) -> int:
+    courses = sorted(courses,key=lambda x: x["deadline"])
+    deadline=0
+    heap=[]
+    heapq.heapify(heap)
+    for course in courses:
+        if deadline!= course["deadline"]:
+            while len(heap)>deadline:
+                heapq.heappop(heap)
+            deadline=course["deadline"]
+        heapq.heappush(heap,course["valeur"])
+
+    while len(heap)>deadline:
+        heapq.heappop(heap)
+    return sum(heap)
+
+    
+def proposition3(courses: list[dict]) -> int:
+    # Version avec heapq.heappushpop
+    courses.sort(key = lambda x: x["deadline"])
+    salaries = []
+    for course in courses:
+        if len(salaries) < course["deadline"]:
+            h.heappush(salaries, course["valeur"])
+        else:
+            h.heappushpop(salaries, course["valeur"])
+
+    return sum(salaries)
+
+
+def proposition4(courses: list[dict]) -> int:
+    courses.sort(key = lambda x: x["deadline"])
+    salaries = []
+    for course in courses:
+        if len(salaries) < course["deadline"]:
+            h.heappush(salaries, course["valeur"])
+        elif salaries and course["valeur"] > salaries[0]:
+            h.heapreplace(salaries, course["valeur"])
+
+    return sum(salaries)
+
+
+def proposition5(courses: list[dict]) -> int:
+    if not courses:
+        return 0
+    livraisons = []
+    gains = 0
+    max_courses = 0
+    for course in courses:
+        heapq.heappush_max(livraisons, [course["valeur"], course["deadline"]])
+        if course["deadline"] > max_courses:
+            max_courses = course["deadline"]
+    i = 1
+    while livraisons:
+        livraison = heapq.heappop_max(livraisons)
+        if i <= livraison[1]:
+            gains += livraison[0]
+            i += 1
+            if i > max_courses:
+                break
+    return gains
 ```
 
 ---
