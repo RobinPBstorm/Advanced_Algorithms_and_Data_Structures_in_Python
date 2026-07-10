@@ -44,6 +44,57 @@ def generer_sitemap_arbre(relations: dict[int, int]) -> str:
     
     return buffer.getvalue()
 
+def proposition1(relations: dict[int, int]) -> str:
+    cache = {}
+    result = StringIO()
+    for i in sorted(relations):
+        parent = relations.get(i)
+        if not parent:
+            cache[i] = str(i)
+        else:
+            cache[i] = f'{cache[parent]} -> {i}'
+    for key in cache:
+        result.write(f"[{key}] {cache[key]}\n")
+    return result.getvalue()
+
+def proposition2(relations: dict[int, int]) -> str:
+    memo = {}
+
+    def chemin(page_id: int) -> str:
+        if page_id in memo:
+            return memo[page_id]
+
+        parent = relations.get(page_id, 0)
+        if parent == 0:
+            memo[page_id] = str(page_id)
+        else:
+            memo[page_id] = f"{chemin(parent)} -> {page_id}"
+        return memo[page_id]
+
+    buffer = StringIO()
+    for page_id in sorted(relations):
+        buffer.write(f"[{page_id}] {chemin(page_id)}\n")
+    return buffer.getvalue()
+
+def proposition3(relations: dict[int, int]) -> str:
+    buffer2 = StringIO()
+
+    @cache
+    def write_parent(parent:int):
+        if relations[parent] !=0:
+            buffer2.write(write_parent(relations[parent]))
+        buffer2.write(f"{parent} -> ")
+        return buffer2.getvalue()
+    
+    sorted_keys=sorted(relations,key=lambda x:x)
+    buffer = StringIO()
+    for key in sorted_keys:
+        buffer2 = StringIO()
+        buffer.write(f"[{key}] ")
+        if relations[key]!=0:
+            buffer.write(write_parent(relations[key]))
+        buffer.write(f"{key}\n")
+
 ```
 
 ---
