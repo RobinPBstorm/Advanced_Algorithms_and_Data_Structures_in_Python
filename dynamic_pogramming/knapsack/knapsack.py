@@ -1,64 +1,3 @@
-## Énoncé : Le Problème du Sac à Dos 0/1 (Version Objets)
-
-### Contexte
-
-Vous disposez d'un sac à dos d'une capacité maximale donnée (un poids) et d'une liste d'objets. Chaque objet possède une **valeur** (le gain s'il est emporté) et un **poids**.
-
-Le problème du "Sac à Dos 0/1" stipule que vous ne pouvez pas fractionner les objets : soit vous prenez l'objet en entier ($1$), soit vous le laissez ($0$).
-
-### Objectif
-
-L'objectif est de maximiser la valeur totale des objets emportés dans le sac sans jamais dépasser la capacité maximale autorisée.
-
-### Consignes de codage
-
-Vous devez écrire une fonction `knapsack(capacite, objets)` en Python.
-
-* **`capacite`** : Un entier représentant le poids maximal que le sac peut supporter.
-* **`objets`** : Une liste de dictionnaires. Chaque dictionnaire représente un objet et suit la structure suivante : `{"valeur": int, "poids": int}`.
-* **Valeur de retour** : La fonction doit renvoyer un **entier** représentant la valeur totale maximale optimale.
-
-> ⚠️ **Attention aux pièges d'implémentation :**
-> * **Stratégies gloutonnes :** Choisir les objets selon le meilleur ratio valeur/poids ou selon le poids le plus léger ne donne pas toujours la solution optimale (voir cas de tests 5 et 6). Votre algorithme doit trouver l'optimum global.
-> * **Complexité et Performance :** Une approche récursive naïve (force brute) aura une complexité exponentielle en $O(2^n)$ et échouera sur les grands ensembles d'objets. Vous devez optimiser votre solution (par exemple, via la **programmation dynamique** ou la **mémoïsation**).
-> 
-> 
-
----
-
-### Exemples de comportement attendu
-
-#### Exemple 1 : Cas classique (et piège glouton)
-
-```python
-objets = [
-    {"valeur": 65, "poids": 12},  # ratio = 5.41
-    {"valeur": 50, "poids": 10},  # ratio = 5.0
-    {"valeur": 50, "poids": 10}   # ratio = 5.0
-]
-# Si la capacité est de 20 :
-# Un algo glouton prendrait le premier objet (poids 12), il ne reste que 8 de place (impossible de mettre les autres). Valeur = 65.
-# L'optimum est de prendre les deux derniers objets (poids 10 + 10 = 20). Valeur = 100.
-
-print(knapsack(20, objets)) 
-# Sortie attendue : 100
-
-```
-
-#### Exemple 2 : Objets identiques
-
-```python
-objets = [{"valeur": 20, "poids": 5}, {"valeur": 20, "poids": 5}, {"valeur": 20, "poids": 5}]
-print(knapsack(11, objets))
-# Sortie attendue : 40  (On peut en prendre exactement 2 sur les 3)
-
-```
-
----
-
-### Prototype de la fonction
-
-```python
 def knapsack(capacite: int, objets: list[dict]) -> int:
     """
     Calcule la valeur maximale possible sans dépasser la capacité du sac.
@@ -67,18 +6,32 @@ def knapsack(capacite: int, objets: list[dict]) -> int:
     :param objets: Liste de dictionnaires, ex: [{"valeur": 10, "poids": 2}]
     :return: Valeur maximale totale (int)
     """
-    # Votre code ici
-    dp = [0] * (capacite + 1)
-    for item in objets:
-        for i in range(capacite, item['poids'] - 1, -1):
-            dp[i] = max(dp[i], item['valeur'] + dp[i - item['poids']])
-    return dp[capacite]
+    return proposition_bastian(capacite, objets)
+import itertools as it
 
-```
+def proposition_morgan(capacite: int, objets: list[dict]) -> int:
+    if sum([o["poids"] for o in objets]) <= capacite:
+        return sum([o["valeur"] for o in objets])
 
-### tests
+    best_value = 0
+    for n in range(len(objets)-1, 0, -1):
+        for combi in it.combinations(objets, n):
+            if sum([o["poids"] for o in combi]) <= capacite:
+                value = sum([o["valeur"] for o in combi])
+                if value > best_value:
+                    best_value = value
 
-```python
+    return best_value
+
+def proposition_bastian(capacite: int, objets: list[dict]) -> int:
+    values = [0] * (capacite + 1)
+    for objet in objets:
+        valeur = objet["valeur"]
+        poids = objet["poids"]
+        for j in range(capacite, poids - 1, -1):
+            values[j] = max(values[j], values[j - poids] + valeur)
+    return values[capacite]
+
 print("Démarrage des tests pour le Sac à Dos 0/1 (Format Objets)...")
 
 # Test 1 : Sac vide ou capacité nulle
@@ -141,5 +94,11 @@ objets_ext = [
 print("Test 9 (Test de performance grande capacité)...", knapsack(1000, objets_ext))
 assert knapsack(1000, objets_ext) == 100, "Échec Test 9 : Échec sur une capacité élevée"
 
+print('test 10')
+objets = [
+    {"valeur": 100, "poids": 5}, 
+    {"valeur": 10, "poids": 2}
+]
+assert knapsack(5, objets) == 100, "Échec Test 10"
+
 print("\nTous les tests du Sac à Dos (Format Objets) sont passés avec succès !")
-```
