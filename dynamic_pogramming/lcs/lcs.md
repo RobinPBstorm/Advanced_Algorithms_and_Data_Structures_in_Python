@@ -35,7 +35,7 @@ Une sous-suite est une suite de caractères qui apparaît dans le même ordre da
 
 ```python
 print(lcs("LOGIQUE", "ALGORITHME"))
-# Sortie attendue : 4  (La sous-suite est "L-G-O-R" ou autre combinaison de longueur 4)
+# Sortie attendue : 4  (La sous-suite est "L-G-I-E" ou autre combinaison de longueur 4)
 
 ```
 
@@ -88,9 +88,9 @@ assert lcs("", "TEST") == 0, "Échec Test 3 : Si un des mots est vide, le résul
 print("Test 4...", lcs("AC", "ABC"))
 assert lcs("AC", "ABC") == 2, "Échec Test 4 : 'AC' est entièrement présent dans 'ABC'"
 
-# Test 5 : Lettres consécutives vs non-consécutives (L-G-O)
+# Test 5 : Lettres consécutives vs non-consécutives (L-G-I-E)
 print("Test 5...", lcs("LOGIQUE", "ALGORITHME"))
-assert lcs("LOGIQUE", "ALGORITHME") == 4, "Échec Test 5 : Problème avec les lettres espacées (L-G-O)"
+assert lcs("LOGIQUE", "ALGORITHME") == 4, "Échec Test 5 : Problème avec les lettres espacées (L-G-I-E)"
 
 # Test 6 : L'exemple du cours (C-A-M-P-I-N-G)
 print("Test 6...", lcs("CHAMPIGNON", "CAMPING"))
