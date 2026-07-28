@@ -56,6 +56,57 @@ def k_plus_proches(nombres: list[int], x: int, k: int) -> list[int]:
     """
     # À toi de jouer
     pass
+
+def proposition_francois(nombres: list[int], x: int, k: int) -> list[int]:
+      def sort_by_distance_then_number(numbers):
+        return sorted(numbers, key=lambda number: (abs(number - x), number))
+
+    if not nombres:
+        return []
+    if k >= len(nombres):
+        return sort_by_distance_then_number(nombres)
+
+    heap = []
+
+    for number in nombres:
+        key_tuple = (-abs(number - x), number)
+        if len(heap) < k:
+            heapq.heappush(heap, key_tuple)
+        else:
+            if key_tuple > heap[0]:
+                heapq.heapreplace(heap, key_tuple)
+    result = [number for distance,number in heap]
+
+    result = sort_by_distance_then_number(result)
+
+    return result
+
+def proposition_loic(nombres: list[int], x: int, k: int) -> list[int]:
+    nombres=list(map(lambda y:(abs(y-x),y), nombres))
+    heapq.heapify(nombres)
+    ans=[]
+    for i in range(k):
+        if not nombres:
+            break
+        ans.append(heapq.heappop(nombres)[1])
+    return ans
+
+def proposition_arnaud(nombres: list[int], x: int, k: int) -> list[int]:
+    heap = []
+    heapq.heapify_max(heap)
+    for nb in nombres:
+        dist = nb - x
+        element = (abs(dist), nb)
+        if len(heap) < k:
+            heapq.heappush_max(heap, element)
+        else:
+            if dist < heap[-1][0]:
+                heapq.heappushpop_max(heap, element)
+    heap.sort()
+    return [x for _, x in heap]
+
+def proposition_daniel(nums: list[int], x: int, k: int):
+    return heapq.nsmallest(k, nums, key= lambda num: (abs(num - x), num)) if nums else []
 ```
 
 ---

@@ -38,7 +38,43 @@ def min_temp_tache(tasks: list[str], n: int) -> int:
         Le nombre d'unités de temps minimum nécessaires (int).
     """
     # Votre code ici
-    pass
+    return proposition_francois(tasks,n)
+
+def proposition_loic(tasks: list[str], n: int) -> int:
+    tasks_name=set(tasks)
+    tasks_count=[]
+    for name in tasks_name:
+        tasks_count.append(tasks.count(name))
+    ans = 0
+    while tasks_count:
+        diff_task = len(tasks_count)
+        min_task = min(tasks_count)
+        cooldown = n - diff_task+1 if n -diff_task+1>0 else 0
+        ans += min_task*diff_task + cooldown * (min_task -1)
+        for i,elem in enumerate(tasks_count):
+            tasks_count[i]=elem-min_task
+        while tasks_count and min(tasks_count)==0:
+            tasks_count.remove(0)
+    return ans
+
+from collections import Counter
+
+def proposition_francois(tasks: list[str], n: int) -> int:
+    if not tasks:
+        return 0
+    counts = Counter(tasks)
+    frequencies = list(counts.values())
+    maximum_frequency = max(frequencies)
+    count_maximum_frequency = frequencies.count(maximum_frequency)
+
+    #si la tâche la plus fréquente est T, qui apparait F fois :
+    #chaque étape doit être séparée par au moins 'n' espaces
+    #pour faire les F fois T : chaque bloc jusqu'à l'avant dernier durera 'n+1', donc :
+    # (F - 1) * (n + 1)
+    #et ensuite on compte le nombre de trucs qui ont la même max fréquence F
+    # donc +count_de_ceux_qui_ont_la_max_frequence_F
+    result = (maximum_frequency - 1) * (n + 1) + count_maximum_frequency
+    return max(result, len(tasks))
 ```
 
 ### Tests
