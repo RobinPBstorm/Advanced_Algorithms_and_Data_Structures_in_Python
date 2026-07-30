@@ -91,6 +91,7 @@ lab_simple = [
     [0, 0],
     [0, 0]
 ]
+
 res_1 = resoudre_labyrinthe(lab_simple)
 print("Test 1...", res_1)
 assert extraire_case_arrivee(res_1) == 1, "Échec Test 1 : Un labyrinthe simple et ouvert doit être résolu."
@@ -150,9 +151,10 @@ lab_geant = [[0] * taille for _ in range(taille)]
 # On remplit de murs pour faire un unique serpentin
 for i in range(taille):
     for j in range(taille):
-        if i % 2 == 1 and j < taille - 1:
+        if (i % 4 == 1 and j < taille - 1) or (i%4 == 3 and j > 0): #ligne changée ici
             lab_geant[i][j] = 1
 res_6 = resoudre_labyrinthe(lab_geant)
+
 print("Test 6 (Test de performance)...")
 assert extraire_case_arrivee(res_6) == 1, "Échec Test 6 : L'algorithme a planté (Stack Overflow ?) ou est trop lent sur une grande grille."
 
@@ -183,13 +185,20 @@ for i in range(size):
 
 # 2. LES PIÈGES : On ouvre des couloirs qui vont tout droit vers les bords...
 # mais qui finissent par des culs-de-sac tout au bout.
-for i in range(0, size - 2, 3):
+for i in range(size):
+    for j in range(size):
+        # On mure les zones inutiles pour forcer un entonnoir diagonal
+        if j > i + 1 or i > j:
+            lab_geant[i][j] = 1
+
+# 2. LES PIÈGES : On ouvre des couloirs qui vont tout droit vers les bords...
+# mais qui finissent par des culs-de-sac tout au bout.
+for i in range(0, size - 2, 2):
     # Fausse piste horizontale
-    lab_geant[i][i+1] = 0 
-    if i + 2 < size:
-        lab_geant[i][i+2] = 0
-        if i + 3 < size:
-            lab_geant[i][i+3] = 1 # Cul-de-sac !
+    for j in range(i,size):#Lignes modifiées
+        lab_geant[i][j] = 0
+    # Fausse piste verticale
+        lab_geant[j][i] = 0
 
 print(f"Test 8 (Labyrinthe Géant {size}x{size} en Escalier)...")
 res_8 = resoudre_labyrinthe(lab_geant)
@@ -198,7 +207,7 @@ res_8 = resoudre_labyrinthe(lab_geant)
 assert res_8 is not None, "Échec Test 8 : Le grand escalier a une solution valide en Bas/Droite !"
 assert res_8[size-1][size-1] == 1, "Échec Test 8 : L'arrivée en bas à droite n'est pas atteinte."
 # On vérifie qu'une des fausses pistes (ex: ligne 3, colonne 6) a bien été nettoyée (vaut 0)
-assert res_8[3][5] == 0, "Échec Test 8 : Le backtracking n'a pas nettoyé les fausses pistes de l'escalier !"
+assert res_8[2][5] == 0, "Échec Test 8 : Le backtracking n'a pas nettoyé les fausses pistes de l'escalier !"
 
 print("\nTous les tests du Labyrinthe sont passés avec succès !")
 ```
