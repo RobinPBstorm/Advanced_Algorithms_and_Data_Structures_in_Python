@@ -70,6 +70,98 @@ La notation portera une attention cruciale à la gestion de la mémoire et à la
 > **Attention au nettoyage des impasses :** Si votre algorithme s'engage dans un couloir qui mène à un cul-de-sac, il doit obligatoirement faire marche arrière et **effacer sa trace** (remettre la case à `0` dans la matrice solution) avant d'explorer une autre direction. Une solution contenant des morceaux de chemins abandonnés sera considérée comme fausse.
 
 ---
+### Solutions
+```python
+def proposition_loic(lab):
+    size = len(lab)
+    path = [ [0] * size for _ in range(size) ]
+    position=[0,0]
+    if lab[position[0]][position[1]]==0:
+        path[position[0]][position[1]]=1
+    else:
+        return None
+    def backtracking():
+        if position[0]==size-1 and position[1]==size-1:
+            raise Exception(path)
+        if not position[0]==size-1:
+            position[0]+=1
+            if lab[position[0]][position[1]]==0:
+                path[position[0]][position[1]]=1
+                backtracking()
+            path[position[0]][position[1]]=0
+            position[0]-=1
+
+        if not position[1]==size-1:
+            position[1]+=1
+            if lab[position[0]][position[1]]==0:
+                path[position[0]][position[1]]=1
+                backtracking()
+            position[1]-=1
+    try:
+        backtracking()
+    except Exception as ans:
+        return ans.args[0]
+
+def proposition_arnaud(maze):
+    n = len(maze)
+    if n == 0 or maze[0][0] == 1 or maze[n-1][n-1] == 1:
+        return None
+    sol = [[0]*n for _ in range(n)]
+
+    def backtrack(x, y):
+        if x == n - 1 and y == n - 1:
+            sol[x][y] = 1
+            return True
+
+        if 0 <= x < n and 0 <= y < n and maze[x][y] == 0:
+            sol[x][y] = 1
+            if backtrack(x + 1, y):
+                return True
+
+            if backtrack(x, y + 1):
+                return True
+
+            sol[x][y] = 0
+
+        return False
+
+
+    if backtrack(0, 0):
+        return sol
+    else:
+        return None
+
+def proposition_hugo(lab):
+    n = len(lab)
+    res = [[0] * n for _ in range(n)]
+
+    def backtrack(x,y):
+
+        #check de la validité du choix  (hors limite) ou (mur)
+        if (x >= n or y >= n) or (lab[x][y] == 1):
+            return False
+
+        res[x][y] = 1 #choix valide
+
+        #Si au bout du tableau, on est good
+        if x == n - 1 and y == n - 1:
+            return True
+
+        #Exploration du tableau
+        if backtrack(x+1, y): # À droite
+            return True
+        if backtrack(x, y+1): # En bas
+            return True
+
+        res[x][y] = 0 #Si pas possible, on annule le choix
+        return False
+
+    if backtrack(0,0):
+        return res
+
+    return None
+```
+
 
 ### Tests
 

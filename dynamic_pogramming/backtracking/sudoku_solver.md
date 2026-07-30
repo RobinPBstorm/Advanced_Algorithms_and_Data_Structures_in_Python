@@ -68,3 +68,50 @@ GRID_EASY = [
     [0,0,0, 0,8,0, 0,7,9]
 ]
 ```
+### solution
+
+```python
+#merci Bastian
+def is_valid(grid, row, col, value):
+    # Vérifie la ligne
+    for c in range(9):
+        if grid[row][c] == value:
+            return False
+
+    # Vérifie la colonne
+    for r in range(9):
+        if grid[r][col] == value:
+            return False
+
+    # Vérifie le sous-carré 3x3
+    start_row = (row // 3) * 3
+    start_col = (col // 3) * 3
+    for r in range(start_row, start_row + 3):
+        for c in range(start_col, start_col + 3):
+            if grid[r][c] == value:
+                return False
+
+    return True
+
+def find_empty_cell(grid):
+    for r in range(9):
+        for c in range(9):
+            if grid[r][c] == 0:
+                return (r, c)
+    return None
+
+def solve(grid):
+    empty_cell = find_empty_cell(grid)
+    if not empty_cell:
+        return True  # Sudoku résolu
+
+    row, col = empty_cell
+    for num in range(1, 10):
+        if is_valid(grid, row, col, num):
+            grid[row][col] = num
+            if solve(grid):
+                return True
+            grid[row][col] = 0  # Backtrack
+
+    return False # Aucun nombre valide trouvé, retour en arrière
+```

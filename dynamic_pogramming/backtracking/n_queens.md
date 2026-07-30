@@ -52,6 +52,71 @@ def solve_n_queens(n):
 
     backtrack(0)
     return solutions
+
+def proposition_valentin(n):
+    solutions = []
+    board = [-1] * n  # board[i] = colonne de la reine à la ligne i
+
+    def is_safe(row, col):
+        for i in range(row):
+            if board[i] == col:
+                return False
+            if abs(i-row) == abs(board[i]-col):
+                return False
+        return True
+            
+
+    def backtrack(row):
+        if row >= n:
+            solutions.append(board.copy())
+            return
+        for i in range(n):
+            if is_safe(row,i):
+                board[row] = i
+                backtrack(row+1)
+                board[row] = -1
+
+    backtrack(0)
+    return solutions
+
+def proposition_bastian(n):
+    solutions = []
+    board = [-1] * n  # board[i] = colonne de la reine à la ligne i
+
+    # Use sets to track occupied columns and diagonals (classic approach)
+    cols = set()
+    diag1 = set()  # r - c
+    diag2 = set()  # r + c
+
+    def is_safe(row, col):
+        return (col not in cols) and ((row - col) not in diag1) and ((row + col) not in diag2)
+
+    def backtrack(row):
+        if row == n:
+            solutions.append(board.copy())
+            return
+
+        for col in range(n):
+            if is_safe(row, col):
+                board[row] = col
+                cols.add(col)
+                diag1.add(row - col)
+                diag2.add(row + col)
+
+                backtrack(row + 1)
+
+                # undo
+                cols.remove(col)
+                diag1.remove(row - col)
+                diag2.remove(row + col)
+                board[row] = -1
+
+    backtrack(0)
+    if solutions:
+        print(f"Nombre de solutions pour n={n}: {len(solutions)}")
+        #print(count_n_queens(n), "solutions trouvées par la fonction de comptage.")
+        #print_board(solutions[0])  # Affiche la première solution trouvée
+    return solutions
 ```
 
 ## Résultats attendus (nombre de solutions)
