@@ -4,72 +4,72 @@
 
 ### 1. Contexte du problème
 
-# Une souris se trouve à la case départ (en haut à gauche) d'un labyrinthe représenté par une grille carrée en deux dimensions de taille $N \times N$. Elle doit trouver un chemin pour atteindre la case d'arrivée (située tout en bas à droite) afin d'y récupérer un morceau de fromage.
+Une souris se trouve à la case départ (en haut à gauche) d'un labyrinthe représenté par une grille carrée en deux dimensions de taille $N \times N$. Elle doit trouver un chemin pour atteindre la case d'arrivée (située tout en bas à droite) afin d'y récupérer un morceau de fromage.
 
-# Le labyrinthe est modélisé par une liste de listes (matrice) d'entiers :
+Le labyrinthe est modélisé par une liste de listes (matrice) d'entiers :
 
-# * Les cases contenant un **`0`** représentent les couloirs **libres** où la souris peut circuler.
-# * Les cases contenant un **`1`** représentent les **murs** infranchissables.
+* Les cases contenant un **`0`** représentent les couloirs **libres** où la souris peut circuler.
+* Les cases contenant un **`1`** représentent les **murs** infranchissables.
 
-# ### 2. Règles de déplacement
+### 2. Règles de déplacement
 
-# Pour simplifier l'exploration, la souris ne peut se déplacer que dans **deux directions** :
+Pour simplifier l'exploration, la souris ne peut se déplacer que dans **deux directions** :
 
-# 1. Vers le **Bas** (augmenter l'indice des lignes : $x + 1$)
-# 2. Vers la **Droite** (augmenter l'indice des colonnes : $y + 1$)
+1. Vers le **Bas** (augmenter l'indice des lignes : $x + 1$)
+2. Vers la **Droite** (augmenter l'indice des colonnes : $y + 1$)
 
-# Il est interdit de sortir des limites de la grille ou de marcher sur un mur.
+Il est interdit de sortir des limites de la grille ou de marcher sur un mur.
 
-# ---
+---
 
-# ### 3. Objectif
+### 3. Objectif
 
-# Vous devez écrire une fonction Python `resoudre_labyrinthe(lab)` utilisant le paradigme du **Backtracking** (exploration avec retour sur ses pas).
+Vous devez écrire une fonction Python `resoudre_labyrinthe(lab)` utilisant le paradigme du **Backtracking** (exploration avec retour sur ses pas).
 
-# #### Spécifications de la fonction :
+#### Spécifications de la fonction :
 
-# * **Entrée :** Une matrice `lab` de taille $N \times N$ contenant des `0` et des `1`.
-# * **Sortie :** * Si un chemin existe, la fonction doit renvoyer une **nouvelle matrice** de taille $N \times N$ appelée `solution`. Dans cette matrice, les cases empruntées par le chemin final doivent valoir `1`, et toutes les autres doivent valoir `0`.
-# * Si aucun chemin n'est possible, la fonction doit renvoyer `None`.
+* **Entrée :** Une matrice `lab` de taille $N \times N$ contenant des `0` et des `1`.
+* **Sortie :** * Si un chemin existe, la fonction doit renvoyer une **nouvelle matrice** de taille $N \times N$ appelée `solution`. Dans cette matrice, les cases empruntées par le chemin final doivent valoir `1`, et toutes les autres doivent valoir `0`.
+* Si aucun chemin n'est possible, la fonction doit renvoyer `None`.
 
-# #### Exemple visuel :
+#### Exemple visuel :
 
-# Pour le labyrinthe suivant à gauche, votre fonction doit calculer et retourner la matrice de droite :
+Pour le labyrinthe suivant à gauche, votre fonction doit calculer et retourner la matrice de droite :
 
-# **Labyrinthe d'entrée :**
+**Labyrinthe d'entrée :**
 
-# ```python
-# lab = [
-#     [0, 1, 0, 0],
-#     [0, 0, 1, 0],
-#     [1, 0, 0, 0],
-#     [1, 1, 1, 0]
-# ]
+```python
+lab = [
+    [0, 1, 0, 0],
+    [0, 0, 1, 0],
+    [1, 0, 0, 0],
+    [1, 1, 1, 0]
+]
 
-# ```
+```
 
-# **Matrice Solution attendue :**
+**Matrice Solution attendue :**
 
-# ```python
-# # La souris a avancé en (0,0) -> (1,0) -> (1,1) -> (2,1) -> (2,2) -> (2,3) -> (3,3)
-# solution = [
-#     [1, 0, 0, 0],
-#     [1, 1, 0, 0],
-#     [0, 1, 1, 1],
-#     [0, 0, 0, 1]
-# ]
+```python
+# La souris a avancé en (0,0) -> (1,0) -> (1,1) -> (2,1) -> (2,2) -> (2,3) -> (3,3)
+solution = [
+    [1, 0, 0, 0],
+    [1, 1, 0, 0],
+    [0, 1, 1, 1],
+    [0, 0, 0, 1]
+]
 
-# ```
+```
 
-# ---
+---
 
-# ### 4. Contrainte d'implémentation (Barème)
+### 4. Contrainte d'implémentation (Barème)
 
-# La notation portera une attention cruciale à la gestion de la mémoire et à la propreté de l'algorithme :
+La notation portera une attention cruciale à la gestion de la mémoire et à la propreté de l'algorithme :
 
-# > **Attention au nettoyage des impasses :** Si votre algorithme s'engage dans un couloir qui mène à un cul-de-sac, il doit obligatoirement faire marche arrière et **effacer sa trace** (remettre la case à `0` dans la matrice solution) avant d'explorer une autre direction. Une solution contenant des morceaux de chemins abandonnés sera considérée comme fausse.
+> **Attention au nettoyage des impasses :** Si votre algorithme s'engage dans un couloir qui mène à un cul-de-sac, il doit obligatoirement faire marche arrière et **effacer sa trace** (remettre la case à `0` dans la matrice solution) avant d'explorer une autre direction. Une solution contenant des morceaux de chemins abandonnés sera considérée comme fausse.
 
-# ---
+---
 
 ### Tests
 
