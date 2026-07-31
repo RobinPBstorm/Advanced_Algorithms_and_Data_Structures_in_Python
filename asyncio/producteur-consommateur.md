@@ -51,3 +51,50 @@ Tu dois simuler une chaîne de traitement de commandes dans un petit e-commerce,
   -> [Consommateur-1] a traité la commande {'id': 'Producteur-2-3', 'produit': 'Clavier'}
 >>> Toutes les commandes ont été traitées (queue vide).
 ```
+
+## propositions
+
+import asyncio
+import random
+
+async def producteur(nom:str, queue: asyncio.Queue, nb_commande: int):
+    for id in range(1, nb_commande+1):
+        await asyncio.sleep(random.randint(1,5))
+        commande = {"id": f"{nom[-1]}-{id}", "produit": random.randint(1,100)}
+        await queue.put(commande)
+        print(f"[{nom}] Commande ajoutée : {commande}")
+    print(f"[{nom}] Terminé, plus de commande à ajouter")
+
+async def consommateur(nom: str, queue: asyncio.Queue):
+    while True:
+        try:
+            commande = await queue.get()
+            print(f"[{nom}] Traitement de {commande}.")
+            await asyncio.sleep(random.randint(1,5))
+            queue.task_done()
+        except asyncio.CancelledError:
+            print(f"[{nom}] Annulé proprement")
+            raise
+
+
+async def main():
+    queue = asyncio.Queue()
+
+    # mes producteurs
+    producteur1 = producteur("producteur1", queue, 3)
+    producteur2 = producteur("producteur2", queue, 3)
+    # mes consommateurs
+    consommateurs = [
+        asyncio.create_task(consommateur(f"consommateur{i}", queue))
+        for i in range(1, 4)
+    ]
+
+    await asyncio.gather(producteur1, producteur2)
+    
+    await queue.join()
+
+    for c in consommateurs:
+        c.cancel()
+    #await consommateur1
+
+asyncio.run(main())
